@@ -4,7 +4,7 @@
  */
 package Interfaces;
 
-import java.util.ArrayList;
+import javax.swing.JTextField;
 
 /**
  *
@@ -12,6 +12,9 @@ import java.util.ArrayList;
  */
 public class MainFrame extends javax.swing.JFrame {
     
+    private JTextField[] formComponents;
+    private String defaultIMSNumberText = "Su IMS es de: ";
+    private String defaultIMSStatusText = "Lo que le califica como: ";
     /**
      * Creates new form MainFrame
      */
@@ -19,10 +22,42 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         btnReset.setOpaque(true);
         
+        JTextField[] formComponents = {inputID, inputName, inputAge, inputWeight, inputHeight} ;
+        
+        this.formComponents = formComponents;
+        
         
     }
 
+    public void getIMS() {
+        
+    }
+            
+            
+    public void resetForms() {
+        for (int i = 0; i < formComponents.length; i++) {
+            formComponents[i].setText("");
+        }
+        
+        lblIMSNumber.setVisible(false);
+        lblIMSStatus.setVisible(false);
+    }
     
+    public boolean confirmCorrectData(){
+        boolean allCorrect = false;
+        try {
+            int idValue = Integer.parseInt( inputID.getText() );
+            int ageValue = Integer.parseInt( inputAge.getText() );
+            int weightValue = Integer.parseInt( inputWeight.getText() );
+            int heightValue = Integer.parseInt( inputHeight.getText() );
+            allCorrect = true;
+            
+        } catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }
+        
+        return allCorrect;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,10 +76,6 @@ public class MainFrame extends javax.swing.JFrame {
         lblHeight = new javax.swing.JLabel();
         lblAge = new javax.swing.JLabel();
         lblWeight1 = new javax.swing.JLabel();
-        inputAge = new javax.swing.JFormattedTextField();
-        inputAge1 = new javax.swing.JFormattedTextField();
-        inputAge2 = new javax.swing.JFormattedTextField();
-        inputAge4 = new javax.swing.JFormattedTextField();
         inputName = new javax.swing.JTextField();
         lblAge1 = new javax.swing.JLabel();
         lblAge2 = new javax.swing.JLabel();
@@ -54,6 +85,10 @@ public class MainFrame extends javax.swing.JFrame {
         lblIMSNumber = new javax.swing.JLabel();
         btnReset = new javax.swing.JButton();
         btnConfirm = new javax.swing.JButton();
+        inputHeight = new javax.swing.JTextField();
+        inputID = new javax.swing.JTextField();
+        inputAge = new javax.swing.JTextField();
+        inputWeight = new javax.swing.JTextField();
         pnlHeader = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         lblSubtitle = new javax.swing.JLabel();
@@ -100,30 +135,6 @@ public class MainFrame extends javax.swing.JFrame {
         lblWeight1.setForeground(new java.awt.Color(0, 0, 0));
         lblWeight1.setText("Peso: ");
         jPanel1.add(lblWeight1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, -1, -1));
-
-        inputAge.setBackground(new java.awt.Color(245, 245, 245));
-        inputAge.setForeground(new java.awt.Color(51, 51, 51));
-        inputAge.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        inputAge.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jPanel1.add(inputAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 430, 170, 30));
-
-        inputAge1.setBackground(new java.awt.Color(245, 245, 245));
-        inputAge1.setForeground(new java.awt.Color(51, 51, 51));
-        inputAge1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        inputAge1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jPanel1.add(inputAge1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 170, 30));
-
-        inputAge2.setBackground(new java.awt.Color(245, 245, 245));
-        inputAge2.setForeground(new java.awt.Color(51, 51, 51));
-        inputAge2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        inputAge2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jPanel1.add(inputAge2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 170, 30));
-
-        inputAge4.setBackground(new java.awt.Color(245, 245, 245));
-        inputAge4.setForeground(new java.awt.Color(51, 51, 51));
-        inputAge4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        inputAge4.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jPanel1.add(inputAge4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 250, 30));
 
         inputName.setBackground(new java.awt.Color(245, 245, 245));
         inputName.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -190,6 +201,42 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jPanel1.add(btnConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 480, 190, 50));
 
+        inputHeight.setBackground(new java.awt.Color(245, 245, 245));
+        inputHeight.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        inputHeight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputHeightActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputHeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 430, 180, 30));
+
+        inputID.setBackground(new java.awt.Color(245, 245, 245));
+        inputID.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        inputID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputIDActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputID, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 250, 30));
+
+        inputAge.setBackground(new java.awt.Color(245, 245, 245));
+        inputAge.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        inputAge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputAgeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, 30));
+
+        inputWeight.setBackground(new java.awt.Color(245, 245, 245));
+        inputWeight.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        inputWeight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputWeightActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputWeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 180, 30));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 1100, 580));
 
         pnlHeader.setBackground(new java.awt.Color(0, 102, 102));
@@ -220,17 +267,36 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+
+        if ( confirmCorrectData() ) {
+            getIMS();
+        }
+    }//GEN-LAST:event_btnConfirmActionPerformed
+
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        // TODO add your handling code here:
+        resetForms();
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void inputNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_inputNameActionPerformed
 
-    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+    private void inputHeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputHeightActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnConfirmActionPerformed
+    }//GEN-LAST:event_inputHeightActionPerformed
+
+    private void inputIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputIDActionPerformed
+
+    private void inputAgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputAgeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputAgeActionPerformed
+
+    private void inputWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputWeightActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputWeightActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,14 +336,11 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirm;
     private javax.swing.JButton btnReset;
-    private javax.swing.JFormattedTextField inputAge;
-    private javax.swing.JFormattedTextField inputAge1;
-    private javax.swing.JFormattedTextField inputAge2;
-    private javax.swing.JFormattedTextField inputAge4;
+    private javax.swing.JTextField inputAge;
+    private javax.swing.JTextField inputHeight;
+    private javax.swing.JTextField inputID;
     private javax.swing.JTextField inputName;
-    private javax.swing.JPasswordField inputPassword;
-    private javax.swing.JPasswordField inputPassword1;
-    private javax.swing.JPasswordField inputPassword2;
+    private javax.swing.JTextField inputWeight;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblAge1;
@@ -291,23 +354,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblIMSNumber;
     private javax.swing.JLabel lblIMSStatus;
     private javax.swing.JLabel lblName;
-    private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblPassword1;
-    private javax.swing.JLabel lblPassword2;
     private javax.swing.JLabel lblSubtitle;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblUsername;
-    private javax.swing.JLabel lblUsername1;
-    private javax.swing.JLabel lblUsername2;
     private javax.swing.JLabel lblWeight1;
     private javax.swing.JLabel lblWelcome;
-    private javax.swing.JPanel pnlBackground;
-    private javax.swing.JPanel pnlBackground1;
-    private javax.swing.JPanel pnlBackground2;
     private javax.swing.JPanel pnlFooter;
     private javax.swing.JPanel pnlHeader;
-    private javax.swing.JLabel textTitle;
-    private javax.swing.JLabel textTitle1;
-    private javax.swing.JLabel textTitle2;
     // End of variables declaration//GEN-END:variables
 }
