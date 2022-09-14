@@ -29,10 +29,18 @@ public class MainFrame extends javax.swing.JFrame {
         
     }
 
-    public void getIMS() {
+    public int getIMS() {
         
+        int weightValue = Integer.parseInt( inputWeight.getText() );
+        int heightValue = Integer.parseInt( inputHeight.getText() );
+        int IMS = weightValue/heightValue;
+        
+        return IMS;
     }
             
+    public void showIMS() {
+        
+    }
             
     public void resetForms() {
         for (int i = 0; i < formComponents.length; i++) {
@@ -271,7 +279,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         if ( confirmCorrectData() ) {
             getIMS();
+            showIMS();
         }
+        
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
