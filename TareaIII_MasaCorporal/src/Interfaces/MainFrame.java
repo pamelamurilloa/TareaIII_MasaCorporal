@@ -4,6 +4,9 @@
  */
 package Interfaces;
 
+import PeopleData.ArchiveManager;
+import PeopleData.User;
+import java.util.HashMap;
 import javax.swing.JTextField;
 
 /**
@@ -13,33 +16,72 @@ import javax.swing.JTextField;
 public class MainFrame extends javax.swing.JFrame {
     
     private JTextField[] formComponents;
+    private String[] diagnostic;
+    
     private String defaultIMSNumberText = "Su IMS es de: ";
     private String defaultIMSStatusText = "Lo que le califica como: ";
+    
+    private ArchiveManager archiveManager = new ArchiveManager();
+
+    
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+        
         btnReset.setOpaque(true);
         
         JTextField[] formComponents = {inputID, inputName, inputAge, inputWeight, inputHeight} ;
+        String[] diagnostic = {"Desnutrido", "Infrapeso", "Bajopeso", "Saludable", "Sobrepeso", "Sobrepeso crónico", "Obesidad premórbida", "Obesidad mórbida"};
         
         this.formComponents = formComponents;
+        this.diagnostic = diagnostic;
         
+        resetForms();
         
     }
 
-    public int getIMS() {
+    public double getIMS() {
         
-        int weightValue = Integer.parseInt( inputWeight.getText() );
-        int heightValue = Integer.parseInt( inputHeight.getText() );
-        int IMS = weightValue/heightValue;
+        double weightValue = Integer.parseInt( inputWeight.getText() );
+        double heightValue = Double.parseDouble( inputHeight.getText() ) / 100;
+        double IMS = weightValue/(heightValue*heightValue);
         
         return IMS;
     }
             
-    public void showIMS() {
+    public void showIMS(double ims) {
+        String status = diagnostic[0];
+        Integer newIMS = (int) ims;
+        if (15 < ims && ims < 18) {
+            status = diagnostic[1];
+        } else if (17 < ims && ims <= 18) {
+            status = diagnostic[2];
+        } else if (18 < ims && ims <= 25) {
+            status = diagnostic[3];
+        } else if (25 < ims && ims <= 30) {
+            status = diagnostic[4];
+        } else if (30 < ims && ims < 36) {
+            status = diagnostic[5];
+        } else if (36 < ims && ims <= 40) {
+            status = diagnostic[6];
+        } else if (40 < ims) {
+            status = diagnostic[7];
+        }
         
+        
+        archiveManager.createFile();
+        archiveManager.writeInFile(status);
+            
+        lblIMSNumber.setVisible(true);
+        lblIMSStatus.setVisible(true);
+        lblIMSNumber.setText(defaultIMSNumberText + newIMS);
+        lblIMSStatus.setText(defaultIMSStatusText + status);
+        
+        archiveManager.createFile();
+        archiveManager.writeInFile("IMS: " + newIMS + ", Estado: " + status);
     }
             
     public void resetForms() {
@@ -49,6 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         lblIMSNumber.setVisible(false);
         lblIMSStatus.setVisible(false);
+        lblError.setVisible(false);
     }
     
     public boolean confirmCorrectData(){
@@ -57,7 +100,19 @@ public class MainFrame extends javax.swing.JFrame {
             int idValue = Integer.parseInt( inputID.getText() );
             int ageValue = Integer.parseInt( inputAge.getText() );
             int weightValue = Integer.parseInt( inputWeight.getText() );
-            int heightValue = Integer.parseInt( inputHeight.getText() );
+            double heightValue = Double.parseDouble( inputHeight.getText() ) / 100;
+            
+            String newUserInfo = "Nombre: " + inputName.getText() + ", Edad: " + ageValue + ", Peso: " + weightValue + ", Altura: " + heightValue;
+            archiveManager.createFile();
+            archiveManager.writeInFile(newUserInfo);
+            
+            HashMap subUser = new HashMap();
+            subUser.put("Nombre", inputName.getText());
+            subUser.put("Edad", ageValue);
+            subUser.put("Peso", weightValue);
+            subUser.put("Altura", heightValue);
+            
+            User.usersInfoHM.put(idValue, subUser);
             allCorrect = true;
             
         } catch (NumberFormatException ex){
@@ -109,10 +164,10 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblIMSStatus.setFont(new java.awt.Font("Kailasa", 0, 28)); // NOI18N
+        lblIMSStatus.setFont(new java.awt.Font("Kailasa", 0, 22)); // NOI18N
         lblIMSStatus.setForeground(new java.awt.Color(0, 0, 0));
         lblIMSStatus.setText("Lo que le califica como:");
-        jPanel1.add(lblIMSStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 330, 500, -1));
+        jPanel1.add(lblIMSStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 330, 500, -1));
 
         lblWelcome.setFont(new java.awt.Font("Kailasa", 1, 36)); // NOI18N
         lblWelcome.setForeground(new java.awt.Color(0, 0, 0));
@@ -136,7 +191,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         lblAge.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         lblAge.setForeground(new java.awt.Color(0, 0, 0));
-        lblAge.setText("m");
+        lblAge.setText("cm");
         jPanel1.add(lblAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 430, -1, -1));
 
         lblWeight1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -151,7 +206,7 @@ public class MainFrame extends javax.swing.JFrame {
                 inputNameActionPerformed(evt);
             }
         });
-        jPanel1.add(inputName, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 250, 30));
+        jPanel1.add(inputName, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 250, 40));
 
         lblAge1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         lblAge1.setForeground(new java.awt.Color(0, 0, 0));
@@ -178,10 +233,10 @@ public class MainFrame extends javax.swing.JFrame {
         lblFillForm.setText("Para poder averiguar su IMS, rellene el siguiente formulario");
         jPanel1.add(lblFillForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
 
-        lblIMSNumber.setFont(new java.awt.Font("Kailasa", 0, 28)); // NOI18N
+        lblIMSNumber.setFont(new java.awt.Font("Kailasa", 0, 22)); // NOI18N
         lblIMSNumber.setForeground(new java.awt.Color(0, 0, 0));
         lblIMSNumber.setText("Su IMS es de: ");
-        jPanel1.add(lblIMSNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 210, 500, -1));
+        jPanel1.add(lblIMSNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 210, 500, -1));
 
         btnReset.setBackground(new java.awt.Color(0, 153, 153));
         btnReset.setFont(new java.awt.Font("Kailasa", 0, 18)); // NOI18N
@@ -216,7 +271,7 @@ public class MainFrame extends javax.swing.JFrame {
                 inputHeightActionPerformed(evt);
             }
         });
-        jPanel1.add(inputHeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 430, 180, 30));
+        jPanel1.add(inputHeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 420, 180, 40));
 
         inputID.setBackground(new java.awt.Color(245, 245, 245));
         inputID.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -225,7 +280,7 @@ public class MainFrame extends javax.swing.JFrame {
                 inputIDActionPerformed(evt);
             }
         });
-        jPanel1.add(inputID, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 250, 30));
+        jPanel1.add(inputID, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 250, 40));
 
         inputAge.setBackground(new java.awt.Color(245, 245, 245));
         inputAge.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -234,7 +289,7 @@ public class MainFrame extends javax.swing.JFrame {
                 inputAgeActionPerformed(evt);
             }
         });
-        jPanel1.add(inputAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, 30));
+        jPanel1.add(inputAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 285, 180, -1));
 
         inputWeight.setBackground(new java.awt.Color(245, 245, 245));
         inputWeight.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
@@ -243,7 +298,7 @@ public class MainFrame extends javax.swing.JFrame {
                 inputWeightActionPerformed(evt);
             }
         });
-        jPanel1.add(inputWeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 360, 180, 30));
+        jPanel1.add(inputWeight, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 350, 180, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 1100, 580));
 
@@ -276,10 +331,18 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
-
-        if ( confirmCorrectData() ) {
-            getIMS();
-            showIMS();
+        boolean emptySpaces = false;
+        for (int i = 0; formComponents.length > i; i++) {
+            if ( formComponents[i].getText().equals("") ) {
+                emptySpaces = true;
+            }
+        }
+            
+        if ( confirmCorrectData() && emptySpaces == false) {
+            double ims = getIMS();
+            showIMS( ims );
+        } else {
+            lblError.setVisible(true);
         }
         
     }//GEN-LAST:event_btnConfirmActionPerformed

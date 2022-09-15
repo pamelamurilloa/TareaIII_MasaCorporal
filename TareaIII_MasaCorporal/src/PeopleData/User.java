@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class User {
     
-    private HashMap usersInfoHM = new HashMap(); 
+    public static HashMap usersInfoHM = new HashMap(); 
     
     private String name;
     private int id;
